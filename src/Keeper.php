@@ -155,8 +155,9 @@ class Keeper
             'type' => '_doc',
             'body' => [
                 'doc' => $data,
-                'upsert' => $data
-            ]
+                'doc_as_upsert' => true,
+            ],
+            'retry_on_conflict' => 3,
         ];
 
         $response = $this->elastic->update($params);
