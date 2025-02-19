@@ -85,9 +85,9 @@ class Indexer
         return $this->keeper->normalizeData($mapping, $data);
     }
 
-    public function put(string $index, ?int $id, array $data): bool
+    public function put(string $index, ?int $id, array $data, array $additionalParams = []): bool
     {
-        return $this->keeper->put($index, $id, $data);
+        return $this->keeper->put($index, $id, $data, $additionalParams);
     }
 
     /**

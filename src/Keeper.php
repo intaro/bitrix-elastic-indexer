@@ -147,7 +147,26 @@ class Keeper
         return $normalizedData;
     }
 
-    public function put(string $index, ?int $id, array $data): bool
+    /**
+     * Updates a document with a script or partial document.
+     *
+     * $additionalParams['refresh']                 = (enum) If `true` then refresh the affected shards to make this operation visible to search, if `wait_for` then wait for a refresh to make this operation visible to search, if `false` (the default) then do nothing with refreshes. (Options = true,false,wait_for)
+     * $additionalParams['wait_for_active_shards']  = (string) Sets the number of shard copies that must be active before proceeding with the update operation. Defaults to 1, meaning the primary shard only. Set to `all` for all shard copies, otherwise set to any non-negative value less than or equal to the total number of copies for the shard (number of replicas + 1)*
+     * $additionalParams['_source']                 = (list) True or false to return the _source field or not, or a list of fields to return
+     * $additionalParams['_source_excludes']        = (list) A list of fields to exclude from the returned _source field
+     * $additionalParams['_source_includes']        = (list) A list of fields to extract and return from the _source field
+     * $additionalParams['lang']                    = (string) The script language (default: painless)
+     * $additionalParams['routing']                 = (string) Specific routing value
+     * $additionalParams['timeout']                 = (time) Explicit operation timeout
+     * $additionalParams['if_seq_no']               = (number) only perform the update operation if the last operation that has changed the document has the specified sequence number
+     * $additionalParams['if_primary_term']         = (number) only perform the update operation if the last operation that has changed the document has the specified primary term
+     * $additionalParams['require_alias']           = (boolean) When true, requires destination is an alias. Default is false
+     *
+     * @param array $additionalParams Associative array of parameters
+     * @return bool
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/master/docs-update.html
+     */
+    public function put(string $index, ?int $id, array $data, array $additionalParams = []): bool
     {
         $params = [
             'index' => $index,
@@ -159,6 +178,10 @@ class Keeper
             ],
             'retry_on_conflict' => 3,
         ];
+
+        if (!empty($additionalParams['refresh']) && in_array($additionalParams['refresh'], [true, false, 'wait_for'], true)) {
+            $params['refresh'] = $additionalParams['refresh'];
+        }
 
         $response = $this->elastic->update($params);
 
