@@ -22,11 +22,15 @@ class Keeper
         $this->elastic = $elastic;
     }
 
-    public function getElementRawData(_CIBElement $element, array $skipProps = []): array
+    public function getElementRawData(_CIBElement $element, array $skipProps = [], array $skipFields = []): array
     {
         $data = [];
 
         foreach ($element->GetFields() as $field => $value) {
+            if ($skipFields && in_array($field, $skipFields, true)) {
+                continue;
+            }
+
             if (strpos($field, '~') === false) {
                 $data[$field] = $value;
             }

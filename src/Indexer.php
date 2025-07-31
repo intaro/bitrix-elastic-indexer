@@ -72,9 +72,9 @@ class Indexer
     /**
      * @throws Exception
      */
-    public function getElementRawData(_CIBElement $element, array $skipProps = []): array
+    public function getElementRawData(_CIBElement $element, array $skipProps = [], array $skipFields = []): array
     {
-        return $this->keeper->getElementRawData($element, $skipProps);
+        return $this->keeper->getElementRawData($element, $skipProps, $skipFields);
     }
 
     /**
